@@ -6,8 +6,11 @@ export const users = pgTable("users", {
     email: text("email").notNull().unique(),
     name: text("name"),
     imageUrl: text("image_url"),
-    createdAt: timestamp("created_at", {mode:"date"}).notNull().defaultNow(),
-    updatedAt: timestamp("updated_at", {mode:"date"}).notNull().defaultNow(),
+    createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { mode: "date" })
+        .notNull()
+        .defaultNow()
+        .$onUpdate(() => new Date()),
 });
 
 export const products = pgTable("products", {
@@ -16,10 +19,10 @@ export const products = pgTable("products", {
     description: text("description").notNull(),
     imageUrl: text("image_url").notNull(),
     userId: text("user_id")
-       .notNull()
-       .references(() => users.id, {onDelete: "cascade"}),
-    createdAt: timestamp("created_at", {mode:"date"}).notNull().defaultNow(),
-    updatedAt: timestamp("updated_at", {mode:"date"}).notNull().defaultNow(),
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
 });
 
 export const comments = pgTable("comments", {
@@ -27,25 +30,26 @@ export const comments = pgTable("comments", {
     content: text("content").notNull(),
     userId: text("user_id")
         .notNull()
-        .references(() => users.id, {onDelete: "cascade"}),
-    productId: text("product_id")
+        .references(() => users.id, { onDelete: "cascade" }),
+    productId: uuid("product_id")
         .notNull()
-        .references(() => products.id, {onDelete: "cascade"}),
+        .references(() => products.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
 });
 
-export const usersRelations = relations(users, ({many}) => ({
+export const usersRelations = relations(users, ({ many }) => ({
     products: many(products),
     comments: many(comments),
 }));
 
-export const productsRelations = relations(products, ({one, many}) => ({
+export const productsRelations = relations(products, ({ one, many }) => ({
     comments: many(comments),
-    user: one(users, {fields: [products.userId], references: [users.id]}),
+    user: one(users, { fields: [products.userId], references: [users.id] }),
 }));
 
-export const commentsRelations = relations(comments, ({one}) => ({
-    user: one(users, {fields: [comments.userId], references: [users.id]}),
-    product: one(products, {fields: [comments.productId], references: [products.id]}),
+export const commentsRelations = relations(comments, ({ one }) => ({
+    user: one(users, { fields: [comments.userId], references: [users.id] }),
+    product: one(products, { fields: [comments.productId], references: [products.id] }),
 }));
 
 export type User = typeof users.$inferSelect;
