@@ -28,4 +28,8 @@ app.use("/api/users", userRoutes)
 app.use("/api/products", productRoutes)
 app.use("/api/comments", commentRoutes)
 
-app.listen(3000, () => console.log("Server is up and running on PORT:", ENV.PORT))
+if (process.env.NODE_ENV !== "production") {
+    app.listen(3000, () => console.log("Server is up and running on PORT:", ENV.PORT))
+}
+
+export default app;
