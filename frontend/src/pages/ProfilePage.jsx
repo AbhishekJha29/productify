@@ -30,17 +30,23 @@ const ProfilePage = () => {
       <div className="stats bg-base-300 w-full">
         <div className="stat">
           <div className="stat-title">Total Products</div>
-          <div className="stat-value text-primary">{products?.length || 0}</div>
+          <div className="stat-value text-primary">{Array.isArray(products) ? products.length : 0}</div>
         </div>
       </div>
 
       {/* Products */}
-      {products?.length === 0 ? (
+      {!Array.isArray(products) || products.length === 0 ? (
         <div className="card bg-base-300">
           <div className="card-body items-center text-center py-16">
             <PackageIcon className="size-16 text-base-content/20" />
-            <h3 className="card-title text-base-content/50">No products yet</h3>
-            <p className="text-base-content/40 text-sm">Start by creating your first product</p>
+            <h3 className="card-title text-base-content/50">
+                {!Array.isArray(products) ? "Failed to load products" : "No products yet"}
+            </h3>
+            <p className="text-base-content/40 text-sm">
+                {!Array.isArray(products) 
+                    ? "Please check your connection and try again." 
+                    : "Start by creating your first product"}
+            </p>
             <Link to="/create" className="btn btn-primary btn-sm mt-4">
               Create Product
             </Link>

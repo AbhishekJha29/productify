@@ -53,12 +53,18 @@ function HomePage() {
           All Products
         </h2>
 
-        {products.length === 0 ? (
+        {!Array.isArray(products) || products.length === 0 ? (
           <div className="card bg-base-300">
             <div className="card-body items-center text-center py-16">
               <PackageIcon className="size-16 text-base-content/20" />
-              <h3 className="card-title text-base-content/50">No products yet</h3>
-              <p className="text-base-content/40 text-sm">Be the first to share something!</p>
+              <h3 className="card-title text-base-content/50">
+                {!Array.isArray(products) ? "Failed to load products" : "No products yet"}
+              </h3>
+              <p className="text-base-content/40 text-sm">
+                {!Array.isArray(products) 
+                  ? "Please check your connection and try again." 
+                  : "Be the first to share something!"}
+              </p>
               <Link to="/create" className="btn btn-primary btn-sm mt-2">
                 Create Product
               </Link>

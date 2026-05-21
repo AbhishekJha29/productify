@@ -20,7 +20,7 @@ function CommentsSection({ productId, comments = [], currentUserId }) {
       <div className="flex items-center gap-2">
         <MessageSquareIcon className="size-5 text-primary" />
         <h3 className="font-bold">Comments</h3>
-        <span className="badge badge-neutral badge-sm">{comments.length}</span>
+        <span className="badge badge-neutral badge-sm">{Array.isArray(comments) ? comments.length : 0}</span>
       </div>
 
       {isSignedIn ? (
@@ -58,10 +58,12 @@ function CommentsSection({ productId, comments = [], currentUserId }) {
       )}
 
       <div className="space-y-2 max-h-80 overflow-y-auto">
-        {comments.length === 0 ? (
+        {!Array.isArray(comments) || comments.length === 0 ? (
           <div className="text-center py-8 text-base-content/50">
             <MessageSquareIcon className="size-8 mx-auto mb-2 opacity-30" />
-            <p className="text-sm">No comments yet. Be first!</p>
+            <p className="text-sm">
+                {!Array.isArray(comments) ? "Failed to load comments" : "No comments yet. Be first!"}
+            </p>
           </div>
         ) : (
           comments.map((comment) => (
